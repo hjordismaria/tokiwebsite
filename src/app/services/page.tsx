@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
-import PageHeader from "@/components/sections/PageHeader";
+import ServicesExplorer, {
+  type Service,
+} from "@/components/sections/ServicesExplorer";
 import Button from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
+import TalkBlob from "@/components/ui/TalkBlob";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -9,55 +12,51 @@ export const metadata: Metadata = {
     "Strategy, product, sourcing, packaging and production — TÓKI connects every link in your value chain.",
 };
 
-const services = [
-  { number: "01", name: "Strategy" },
-  { number: "02", name: "Product" },
-  { number: "03", name: "Sourcing" },
-  { number: "04", name: "Packaging" },
-  { number: "05", name: "Production" },
-];
-
 const blurb =
   "Lorem ipsum dolor sit amet consectetur. Consectetur sit magna eget ac turpis. Nunc vulputate lectus ac posuere iaculis aliquam.";
+
+const services: Service[] = [
+  { number: "01", name: "Strategy", image: "/images/service-strategy.png", width: 304, height: 458, blurb },
+  { number: "02", name: "Product", image: "/images/service-product.png", width: 456, height: 454, blurb },
+  { number: "03", name: "Packaging", image: "/images/service-packaging.png", width: 636, height: 358, blurb },
+  { number: "04", name: "Sourcing", image: "/images/service-sourcing.png", width: 356, height: 536, blurb },
+  { number: "05", name: "Production", image: "/images/service-production.png", width: 408, height: 408, blurb },
+];
 
 export default function ServicesPage() {
   return (
     <>
-      <PageHeader
-        eyebrow="Services"
-        title="How we work with TÓKI"
-        intro="We connect strategy, product, sourcing, packaging and production so that every decision supports the next."
-      />
-
-      <section className="pb-section" aria-label="Our services">
+      <section className="pt-section pb-16">
         <Container>
-          <ul className="flex flex-col">
-            {services.map((service) => (
-              <li
-                key={service.number}
-                className="flex flex-col gap-4 border-t border-black/60 py-10 md:flex-row md:items-baseline md:gap-10"
-              >
-                <span className="font-display text-title text-primary md:w-12 md:shrink-0">
-                  {service.number}
-                </span>
-                <h2 className="font-display text-display uppercase text-ink md:w-72 md:shrink-0">
-                  {service.name}
-                </h2>
-                <p className="font-sans text-body text-ink">{blurb}</p>
-              </li>
-            ))}
-          </ul>
+          <h1 className="text-center font-serif text-hero font-bold text-ink">
+            How we work with Tóki
+          </h1>
         </Container>
       </section>
 
       <section className="pb-section">
-        <Container className="flex flex-col items-start gap-8 rounded-panel bg-surface-warm p-gutter py-16">
-          <h2 className="max-w-2xl font-display text-display uppercase text-ink">
-            That&rsquo;s okay. Start with the idea. We&rsquo;ll help with the rest.
-          </h2>
-          <Button href="/book" variant="primary" size="lg">
-            Book a meeting
-          </Button>
+        <Container>
+          <ServicesExplorer services={services} defaultIndex={2} />
+        </Container>
+      </section>
+
+      <section className="pb-section">
+        <Container className="grid items-center gap-12 lg:grid-cols-2">
+          <TalkBlob
+            variant="bold"
+            caption="Not sure what you need?"
+            title="Let's talk."
+            href="/book"
+            className="justify-self-center lg:justify-self-start"
+          />
+          <div className="flex flex-col items-start gap-8">
+            <p className="max-w-lg font-display text-title font-bold text-ink">
+              That&rsquo;s okay. Start with the idea. We&rsquo;ll help with the rest.
+            </p>
+            <Button href="/book" variant="dark" size="lg">
+              Book a meeting
+            </Button>
+          </div>
         </Container>
       </section>
     </>

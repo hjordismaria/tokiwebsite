@@ -19,6 +19,9 @@
   --font-body: var(--font-raleway), "Helvetica Neue", Arial, sans-serif;
   --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-script: var(--font-reenie-beanie), "Segoe Script", cursive;
+  --font-serif: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  --font-hand: var(--font-hi-melody), var(--font-reenie-beanie), "Segoe Script", cursive;
+  --font-founder: var(--font-elms-sans), var(--font-montserrat), Arial, sans-serif;
 
   --text-hero: clamp(2.25rem, 5.2vw, 4rem);
   --text-hero--line-height: 1.08;
@@ -42,6 +45,8 @@
   --radius-pill: 9999px;
   --radius-card: 1.25rem;
   --radius-panel: 2.5rem;
+  --radius-blob: 63% 37% 54% 46% / 55% 48% 52% 45%;
+  --radius-blob-alt: 42% 58% 47% 53% / 61% 44% 56% 39%;
 
   --spacing-section: clamp(4rem, 8vw, 7.5rem);
   --spacing-gutter: clamp(1.25rem, 4vw, 4rem);

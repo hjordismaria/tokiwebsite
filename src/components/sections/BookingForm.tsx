@@ -9,12 +9,9 @@ export default function BookingForm() {
 
   if (submitted) {
     return (
-      <div
-        role="status"
-        className="rounded-panel border border-black bg-surface p-10"
-      >
+      <div role="status" className="rounded-card bg-surface p-10">
         <h3 className="font-display text-title uppercase text-ink">
-          Thanks — we&rsquo;ll be in touch.
+          Thanks &mdash; we&rsquo;ll be in touch.
         </h3>
         <p className="mt-4 font-sans text-body text-ink">
           This prototype does not send anything yet. Connect a form handler to
@@ -43,7 +40,7 @@ export default function BookingForm() {
       <Input label="Email" name="email" type="email" autoComplete="email" required />
       <Input label="Number" name="number" type="tel" autoComplete="tel" />
       <Input label="Message" name="message" as="textarea" required />
-      <Button type="submit" variant="primary" size="lg" className="self-start">
+      <Button type="submit" variant="primary" size="lg" shape="rounded" className="self-end">
         Find appointment
       </Button>
     </form>

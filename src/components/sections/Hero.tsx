@@ -31,7 +31,7 @@ export default function Hero() {
             width={826}
             height={924}
             priority
-            className="relative w-full max-w-md rounded-panel object-cover"
+            className="relative w-full max-w-sm rounded-panel object-cover"
           />
         </div>
       </Container>
