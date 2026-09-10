@@ -219,21 +219,82 @@ public/icons/plus.svg, chevron-down.svg
 
 ---
 
-## Deploying
+## Deploying to Netlify
 
-Nothing is deployed yet. It's a stock Next.js app with no database, no env vars and no runtime
-dependencies, so any Next-compatible host works — Vercel is the path of least resistance
-(import the GitHub repo, accept the defaults).
+Nothing is deployed yet. Netlify supports Next.js 16 natively with zero configuration, via its
+[OpenNext adapter](https://github.com/opennextjs/opennextjs-netlify) — it detects Next.js and
+installs the runtime for you. **This app needs no environment variables**, so there is nothing
+to configure beyond connecting the repo.
 
-The only server-side runtime piece is the locale redirect in `proxy.ts`; every page itself is
-statically generated. A host that doesn't support middleware/proxy would still serve the pages,
-but `/book` would 404 instead of redirecting to `/en/book`.
-
-Before any deploy:
+Always sanity-check locally first:
 
 ```bash
 npm run lint && npm run build
 ```
+
+### First deploy (connect the GitHub repo — recommended)
+
+1. Sign in at [app.netlify.com](https://app.netlify.com) and choose
+   **Add new site → Import an existing project**.
+2. Pick **GitHub**, authorise Netlify, and select **`hjordismaria/tokiwebsite`**.
+3. Netlify auto-detects Next.js and pre-fills the build settings. They should read:
+   - **Build command:** `npm run build`
+   - **Publish directory:** `.next`
+   - **Branch to deploy:** `main`
+
+   These are also committed in [`netlify.toml`](netlify.toml), which wins over the UI — so if
+   you need to change them, edit that file rather than the dashboard.
+4. **Do not add any environment variables.** In particular never add `FIGMA_API_KEY` — it is
+   only used locally to pull assets out of Figma, is not needed to build, and Netlify's secret
+   scanner will fail the build if it finds a token's value in the output.
+5. Click **Deploy**. First build takes a few minutes; afterwards you get a URL like
+   `random-name-123.netlify.app`.
+
+From then on **every push to `main` deploys automatically**, and every pull request gets its
+own Deploy Preview URL.
+
+### Deploying from your machine instead
+
+```bash
+npm install -g netlify-cli
+netlify login
+netlify init          # links this folder to a Netlify site (first time only)
+netlify deploy --build            # draft URL, safe for checking
+netlify deploy --build --prod     # promotes to the live site
+```
+
+`netlify init` writes a `.netlify/` folder, which is already gitignored.
+
+### What Netlify does with this particular site
+
+- **All 8 pages are prerendered** (`/en`, `/is`, and the three sub-pages in each language), so
+  they are served as static files from the CDN.
+- **`src/proxy.ts` becomes a Netlify Edge Function.** That is what makes `/book` redirect to
+  `/en/book` or `/is/book`. It is the only server-side piece, and it is edge-safe: it imports
+  nothing but `next/server` and our own config, with no Node built-ins and no CommonJS
+  dependencies (the usual cause of "Failed to load external module" build failures on Netlify).
+- **`next/image` is handled by Netlify's image CDN** automatically — no config needed.
+
+### Custom domain
+
+Once the site is live: **Site configuration → Domain management → Add a domain**. Netlify walks
+you through either delegating the domain's nameservers to Netlify (simplest) or adding a
+`CNAME` record at your existing DNS provider. HTTPS is provisioned free via Let's Encrypt and
+renews itself.
+
+### Worth knowing
+
+- **Node version** is pinned to 22 in both [`.nvmrc`](.nvmrc) and `netlify.toml`. Next 16 needs
+  20.19+, so don't lower it.
+- **Don't pin the Netlify adapter.** There is deliberately no `[[plugins]]` block in
+  `netlify.toml`; Netlify keeps the runtime updated itself, and freezing it means missing fixes
+  for new Next.js releases.
+- **The booking form still goes nowhere.** If you want the quickest fix, [Netlify
+  Forms](https://docs.netlify.com/manage/forms/setup/) is built into the platform — it needs a
+  `data-netlify="true"` attribute and a real `POST` submission rather than the current
+  `preventDefault()` handler in
+  [`BookingForm.tsx`](src/components/sections/BookingForm.tsx). Submissions then show up in the
+  Netlify dashboard with no backend to run.
 
 ---
 

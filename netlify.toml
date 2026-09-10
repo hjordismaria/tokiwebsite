@@ -1,0 +1,15 @@
+# Netlify build settings. Next.js on Netlify works with zero configuration —
+# this file only pins the things worth pinning so builds are reproducible.
+#
+# The Next.js Runtime (@netlify/plugin-nextjs) is installed and kept up to date
+# by Netlify automatically. Do NOT add a [[plugins]] block for it unless you
+# specifically need to freeze the adapter version; pinning it means missing
+# fixes for new Next.js releases.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Match the version in .nvmrc. Next 16 needs Node 20.19+; 22 is current LTS.
+  NODE_VERSION = "22"
