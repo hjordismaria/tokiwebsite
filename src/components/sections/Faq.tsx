@@ -1,34 +1,34 @@
-import Accordion, { type AccordionItem } from "@/components/ui/Accordion";
+import Accordion from "@/components/ui/Accordion";
 import Container from "@/components/ui/Container";
 import StarDoodle from "@/components/ui/StarDoodle";
+import TalkBlob from "@/components/ui/TalkBlob";
+import { localePath, type Locale } from "@/i18n/config";
+import type { Dictionary } from "@/i18n/dictionaries";
 
-const answer =
-  "TÓKI helps businesses develop, source and optimise physical products, packaging and the entire value chain around them, from the initial idea through to production implementation.";
+type FaqProps = { lang: Locale; t: Dictionary["faq"] };
 
-const items: AccordionItem[] = [
-  { question: "What exactly does TÓKI do?", answer },
-  { question: "Is TÓKI a packaging agency?", answer },
-  {
-    question: "Do I need to know exactly what I need before working with TÓKI?",
-    answer,
-  },
-  { question: "At what stage can I bring TÓKI in?", answer },
-  { question: "Does TÓKI only work with large companies?", answer },
-];
-
-export default function Faq() {
+export default function Faq({ lang, t }: FaqProps) {
   return (
     <section className="py-section" aria-labelledby="faq-heading">
       <Container className="flex flex-col gap-12">
-        <div className="flex items-start gap-8">
-          <StarDoodle className="w-20 shrink-0 text-ink sm:w-28" />
+        <div className="flex items-start justify-between gap-8">
           <h2 id="faq-heading" className="font-display text-display text-ink">
-            FAQ
-            <span className="mt-2 block uppercase">Got questions?</span>
-            <span className="block uppercase text-primary">We got you.</span>
+            {t.title}
+            <span className="mt-2 block uppercase">{t.subtitle}</span>
+            <span className="block uppercase text-primary">{t.emphasis}</span>
           </h2>
+          <StarDoodle className="w-20 shrink-0 text-ink sm:w-28" />
         </div>
-        <Accordion items={items} />
+
+        <Accordion items={t.items} />
+
+        <div className="flex justify-end">
+          <TalkBlob
+            title={t.talkTitle}
+            caption={t.talkCaption}
+            href={localePath(lang, "/book")}
+          />
+        </div>
       </Container>
     </section>
   );

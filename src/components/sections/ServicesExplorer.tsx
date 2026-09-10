@@ -15,12 +15,21 @@ export type Service = {
 
 type ServicesExplorerProps = {
   services: Service[];
+  labels: {
+    categories: string;
+    /** "{name}" is replaced with the service name. */
+    show: string;
+    /** "{name}" is replaced with the service name. */
+    panelAlt: string;
+    logosAlt: string;
+  };
   /** Index selected on first render. */
   defaultIndex?: number;
 };
 
 export default function ServicesExplorer({
   services,
+  labels,
   defaultIndex = 0,
 }: ServicesExplorerProps) {
   const [active, setActive] = useState(defaultIndex);
@@ -45,7 +54,7 @@ export default function ServicesExplorer({
       <div
         ref={listRef}
         role="tablist"
-        aria-label="Service categories"
+        aria-label={labels.categories}
         className="flex snap-x gap-4 overflow-x-auto pb-4 md:overflow-visible md:pb-0"
       >
         {services.map((service, index) => {
@@ -95,7 +104,7 @@ export default function ServicesExplorer({
             <button
               key={service.number}
               type="button"
-              aria-label={`Show ${service.name}`}
+              aria-label={labels.show.replace("{name}", service.name)}
               aria-pressed={isActive}
               onClick={() => setActive(index)}
               className={`relative h-4 rounded-pill border transition-all duration-300 ${
@@ -122,7 +131,7 @@ export default function ServicesExplorer({
           <p className="max-w-lg font-sans text-body text-ink">{current.blurb}</p>
           <Image
             src="/images/service-logos.png"
-            alt="Sustainable options. Creative structures. From concept to production."
+            alt={labels.logosAlt}
             width={896}
             height={164}
             className="w-full max-w-md"
@@ -131,7 +140,7 @@ export default function ServicesExplorer({
         <Image
           key={current.image}
           src={current.image}
-          alt={`${current.name} at TÓKI`}
+          alt={labels.panelAlt.replace("{name}", current.name)}
           width={current.width}
           height={current.height}
           className="aspect-video w-full rounded-panel object-cover"

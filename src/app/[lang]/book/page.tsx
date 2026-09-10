@@ -2,12 +2,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import BookingForm from "@/components/sections/BookingForm";
 import Container from "@/components/ui/Container";
+import { getLocale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 
-export const metadata: Metadata = {
-  title: "Start a project",
-  description:
-    "Book a consultation with TÓKI and tell us about your challenge. Every project starts with a conversation.",
-};
+type PageProps = { params: Promise<{ lang: string }> };
 
 const socials = [
   { href: "https://linkedin.com", label: "LinkedIn", icon: "/icons/social-3.svg" },
@@ -15,14 +13,19 @@ const socials = [
   { href: "https://instagram.com", label: "Instagram", icon: "/icons/instagram.svg" },
 ];
 
-export default function BookPage() {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const t = getDictionary(await getLocale(params)).book;
+  return { title: t.metaTitle, description: t.metaDescription };
+}
+
+export default async function BookPage({ params }: PageProps) {
+  const t = getDictionary(await getLocale(params)).book;
+
   return (
     <>
       <section className="pt-section pb-16">
         <Container>
-          <h1 className="text-center font-sans text-hero text-ink">
-            Start a project
-          </h1>
+          <h1 className="text-center font-sans text-hero text-ink">{t.heading}</h1>
         </Container>
       </section>
 
@@ -30,13 +33,13 @@ export default function BookPage() {
         <Container>
           <div className="grid gap-14 rounded-panel bg-accent p-gutter py-12 lg:grid-cols-2 lg:gap-16">
             <div className="flex flex-col gap-8 lg:order-2">
-              <h2 className="font-sans text-display text-ink">Book a consultation</h2>
-              <BookingForm />
+              <h2 className="font-sans text-display text-ink">{t.consultation}</h2>
+              <BookingForm labels={t.form} />
             </div>
 
             <div className="flex flex-col gap-14 lg:order-1">
               <div className="flex flex-col gap-6">
-                <h2 className="font-sans text-display text-ink">Contact</h2>
+                <h2 className="font-sans text-display text-ink">{t.contact}</h2>
                 <ul className="flex flex-col gap-4">
                   <li>
                     <a
@@ -60,7 +63,7 @@ export default function BookPage() {
               </div>
 
               <div className="flex flex-col gap-6">
-                <h2 className="font-sans text-display text-ink">Let&rsquo;s connect</h2>
+                <h2 className="font-sans text-display text-ink">{t.connect}</h2>
                 <ul className="flex items-center gap-6">
                   {socials.map((social) => (
                     <li key={social.label}>

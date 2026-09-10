@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import {
   Elms_Sans,
   Hi_Melody,
@@ -9,7 +10,9 @@ import {
 } from "next/font/google";
 import SiteHeader from "@/components/sections/SiteHeader";
 import SiteFooter from "@/components/sections/SiteFooter";
-import "./globals.css";
+import { getLocale, locales } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
+import "../globals.css";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -49,15 +52,6 @@ const elmsSans = Elms_Sans({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "TÓKI — A partner from idea to impact",
-    template: "%s — TÓKI",
-  },
-  description:
-    "TÓKI helps businesses develop, source and optimise physical products, packaging and the entire value chain around them.",
-};
-
 const fontVariables = [
   montserrat,
   raleway,
@@ -69,13 +63,37 @@ const fontVariables = [
   .map((font) => font.variable)
   .join(" ");
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+type LayoutProps = {
+  children: ReactNode;
+  params: Promise<{ lang: string }>;
+};
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return locales.map((lang) => ({ lang }));
+}
+
+export async function generateMetadata({
+  params,
+}: Pick<LayoutProps, "params">): Promise<Metadata> {
+  const dict = getDictionary(await getLocale(params));
+  return {
+    title: { default: dict.meta.title, template: "%s — TÓKI" },
+    description: dict.meta.description,
+  };
+}
+
+export default async function RootLayout({ children, params }: LayoutProps) {
+  const lang = await getLocale(params);
+  const dict = getDictionary(lang);
+
   return (
-    <html lang="en" className={`${fontVariables} h-full antialiased`}>
+    <html lang={lang} className={`${fontVariables} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        <SiteHeader />
+        <SiteHeader lang={lang} labels={dict.nav} />
         <main className="flex flex-1 flex-col">{children}</main>
-        <SiteFooter />
+        <SiteFooter lang={lang} labels={dict.footer} />
       </body>
     </html>
   );

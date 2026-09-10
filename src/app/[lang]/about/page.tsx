@@ -3,23 +3,20 @@ import Image from "next/image";
 import Blob from "@/components/ui/Blob";
 import Button from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
+import { getLocale, localePath } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 
-export const metadata: Metadata = {
-  title: "About",
-  description:
-    "TÓKI believes that products, packaging, suppliers and logistics are never isolated subjects.",
-};
+type PageProps = { params: Promise<{ lang: string }> };
 
-const intro = [
-  "At TÓKI, we believe that products, packaging, suppliers and logistics are never isolated subjects. A decision made at one end of the chain will always have an impact on the rest.",
-  "That is why we do not offer a standardised methodology. Every project starts with a conversation about your challenge or opportunity. From there, we identify where TÓKI can create real value and what the right next step should be.",
-  "Our role is not to look at design, sourcing or production in isolation. It is to understand how each decision affects the entire value chain, and to bring together the right expertise and partners to move a project forward, from idea to implementation.",
-];
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const t = getDictionary(await getLocale(params)).about;
+  return { title: t.metaTitle, description: t.metaDescription };
+}
 
-const lorem =
-  "Lorem ipsum dolor sit amet consectetur. Consectetur sit magna eget ac turpis. Nunc vulputate lectus ac posuere iaculis aliquam.";
+export default async function AboutPage({ params }: PageProps) {
+  const lang = await getLocale(params);
+  const t = getDictionary(lang).about;
 
-export default function AboutPage() {
   return (
     <>
       <section className="pt-section pb-16">
@@ -32,7 +29,7 @@ export default function AboutPage() {
             />
             <Image
               src="/images/about-hero.png"
-              alt="The TÓKI team working around a table of sketches"
+              alt={t.heroAlt}
               width={1102}
               height={742}
               priority
@@ -41,11 +38,11 @@ export default function AboutPage() {
           </div>
           <div className="flex flex-col gap-8">
             <h1 className="font-body text-display font-light text-ink">
-              <span className="block uppercase">About</span>
-              Tóki
+              <span className="block uppercase">{t.eyebrow}</span>
+              {t.brand}
             </h1>
             <div className="flex flex-col gap-6">
-              {intro.map((paragraph) => (
+              {t.intro.map((paragraph) => (
                 <p key={paragraph} className="font-sans text-body text-ink">
                   {paragraph}
                 </p>
@@ -60,7 +57,7 @@ export default function AboutPage() {
           <div className="relative isolate w-full max-w-sm justify-self-center pt-12 pr-10 lg:justify-self-start">
             <Image
               src="/images/founder.png"
-              alt="Portrait of the TÓKI founder"
+              alt={t.founderAlt}
               width={1365}
               height={2048}
               className="aspect-square w-full rounded-full object-cover object-top"
@@ -71,7 +68,7 @@ export default function AboutPage() {
               className="absolute -right-4 top-0 w-48 p-6 sm:w-56"
             >
               <p className="text-center font-hand text-body uppercase leading-tight text-white">
-                We believe that great ideas can create real impact.
+                {t.belief}
               </p>
             </Blob>
           </div>
@@ -80,19 +77,19 @@ export default function AboutPage() {
               id="founder-heading"
               className="font-founder text-hero uppercase text-ink"
             >
-              Meet the founder
+              {t.founderHeading}
             </h2>
-            <p className="font-sans text-body text-ink">{lorem}</p>
-            <p className="font-sans text-body text-ink">{lorem}</p>
+            <p className="font-sans text-body text-ink">{t.lorem}</p>
+            <p className="font-sans text-body text-ink">{t.lorem}</p>
           </div>
         </Container>
       </section>
 
       <section className="pb-section">
         <Container className="flex flex-col items-center gap-12">
-          <p className="max-w-4xl font-sans text-body text-ink">{lorem}</p>
-          <Button href="/book" variant="primary" size="lg">
-            Book a meeting
+          <p className="max-w-4xl font-sans text-body text-ink">{t.lorem}</p>
+          <Button href={localePath(lang, "/book")} variant="primary" size="lg">
+            {t.bookMeeting}
           </Button>
         </Container>
       </section>

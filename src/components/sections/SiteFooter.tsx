@@ -1,6 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
+import { localePath, type Locale } from "@/i18n/config";
+import type { Dictionary } from "@/i18n/dictionaries";
+
+type SiteFooterProps = {
+  lang: Locale;
+  labels: Dictionary["footer"];
+};
 
 const socials = [
   { href: "https://instagram.com", label: "Instagram", icon: "/icons/instagram.svg" },
@@ -8,12 +15,12 @@ const socials = [
   { href: "https://linkedin.com", label: "LinkedIn", icon: "/icons/social-3.svg" },
 ];
 
-export default function SiteFooter() {
+export default function SiteFooter({ lang, labels }: SiteFooterProps) {
   return (
     <footer className="border-t border-black/10 bg-surface-muted">
       <Container className="grid gap-12 py-section md:grid-cols-3 md:items-start">
         <div className="flex flex-col gap-6">
-          <h2 className="font-sans text-title text-ink">Contact us</h2>
+          <h2 className="font-sans text-title text-ink">{labels.contact}</h2>
           <ul className="flex flex-col gap-4">
             <li>
               <a
@@ -37,7 +44,7 @@ export default function SiteFooter() {
         </div>
 
         <div className="flex justify-center">
-          <Link href="/" aria-label="TÓKI home">
+          <Link href={localePath(lang, "/")} aria-label={labels.homeLink}>
             <Image
               src="/images/logo.png"
               alt="TÓKI"
@@ -49,7 +56,7 @@ export default function SiteFooter() {
         </div>
 
         <div className="flex flex-col gap-6 md:items-end">
-          <h2 className="font-sans text-title text-ink">Follow Tóki</h2>
+          <h2 className="font-sans text-title text-ink">{labels.follow}</h2>
           <ul className="flex items-center gap-6">
             {socials.map((social) => (
               <li key={social.label}>

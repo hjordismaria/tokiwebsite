@@ -6,22 +6,31 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Button from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
+import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
+import { localePath, type Locale } from "@/i18n/config";
+import type { Dictionary } from "@/i18n/dictionaries";
 
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/services", label: "Services" },
-];
+type SiteHeaderProps = {
+  lang: Locale;
+  labels: Dictionary["nav"];
+};
 
-export default function SiteHeader() {
+export default function SiteHeader({ lang, labels }: SiteHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+
+  const navLinks = [
+    { href: localePath(lang, "/"), label: labels.home },
+    { href: localePath(lang, "/about"), label: labels.about },
+    { href: localePath(lang, "/services"), label: labels.services },
+  ];
+  const bookHref = localePath(lang, "/book");
 
   return (
     <header className="sticky top-0 z-50 border-b border-black/10 bg-surface-muted/90 backdrop-blur">
       <Container className="flex items-center justify-between gap-6 py-4">
         <Link
-          href="/"
+          href={localePath(lang, "/")}
           className="flex items-center gap-3"
           onClick={() => setMenuOpen(false)}
         >
@@ -33,10 +42,10 @@ export default function SiteHeader() {
             priority
             className="h-14 w-14 object-contain"
           />
-          <span className="sr-only">TÓKI home</span>
+          <span className="sr-only">{labels.homeLink}</span>
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-10 lg:flex">
+        <nav aria-label={labels.main} className="hidden items-center gap-10 lg:flex">
           {navLinks.map((link) => {
             const isActive = pathname === link.href;
             return (
@@ -55,9 +64,9 @@ export default function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-6 lg:flex">
-          <LanguageSwitcher />
-          <Button href="/book" variant="outline" size="md">
-            Book
+          <LanguageSwitcher current={lang} label={labels.changeLanguage} />
+          <Button href={bookHref} variant="outline" size="md">
+            {labels.book}
           </Button>
         </div>
 
@@ -65,7 +74,7 @@ export default function SiteHeader() {
           type="button"
           aria-expanded={menuOpen}
           aria-controls="mobile-menu"
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-label={menuOpen ? labels.closeMenu : labels.openMenu}
           onClick={() => setMenuOpen((open) => !open)}
           className="flex flex-col gap-1.5 p-2 lg:hidden"
         >
@@ -96,7 +105,7 @@ export default function SiteHeader() {
         className="border-t border-black/10 bg-surface-muted lg:hidden"
       >
         <Container className="flex flex-col gap-6 py-8">
-          <nav aria-label="Mobile" className="flex flex-col gap-5">
+          <nav aria-label={labels.mobile} className="flex flex-col gap-5">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -110,33 +119,13 @@ export default function SiteHeader() {
             ))}
           </nav>
           <div className="flex items-center gap-6">
-            <LanguageSwitcher />
-            <Button href="/book" variant="outline" size="md" onClick={() => setMenuOpen(false)}>
-              Book
+            <LanguageSwitcher current={lang} label={labels.changeLanguage} />
+            <Button href={bookHref} variant="outline" size="md" onClick={() => setMenuOpen(false)}>
+              {labels.book}
             </Button>
           </div>
         </Container>
       </div>
     </header>
-  );
-}
-
-function LanguageSwitcher() {
-  return (
-    <button
-      type="button"
-      className="flex items-center gap-2 rounded-pill border border-black px-4 py-2 font-sans text-eyebrow text-ink transition-colors duration-200 hover:bg-black hover:text-white"
-    >
-      EN
-      <svg
-        aria-hidden
-        viewBox="0 0 18 18"
-        className="h-4 w-4 fill-current"
-        focusable="false"
-      >
-        <path d="M5.5575 6.4425L9 9.87751L12.4425 6.4425L13.5 7.5L9 12L4.5 7.5L5.5575 6.4425Z" />
-      </svg>
-      <span className="sr-only">Change language</span>
-    </button>
   );
 }

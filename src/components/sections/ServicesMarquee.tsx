@@ -1,22 +1,13 @@
 import Marquee from "@/components/ui/Marquee";
+import type { Dictionary } from "@/i18n/dictionaries";
 
-const services = [
-  "Concepting",
-  "Production",
-  "Sourcing",
-  "Packaging",
-  "Strategy",
-  "Product",
-];
+type ServicesMarqueeProps = { t: Dictionary["marquee"] };
 
-export default function ServicesMarquee() {
+export default function ServicesMarquee({ t }: ServicesMarqueeProps) {
   return (
-    <section
-      aria-label="What we do"
-      className="border-y border-black bg-surface-muted py-6"
-    >
+    <section aria-label={t.label} className="border-y border-black bg-surface-muted py-6">
       <Marquee>
-        {services.map((service) => (
+        {t.items.map((service) => (
           <span
             key={service}
             className="flex items-center gap-10 whitespace-nowrap px-10 font-sans text-marquee text-ink"

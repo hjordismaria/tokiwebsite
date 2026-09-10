@@ -1,21 +1,25 @@
 import Image from "next/image";
 import Button from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
+import { localePath, type Locale } from "@/i18n/config";
+import type { Dictionary } from "@/i18n/dictionaries";
 
-export default function Hero() {
+type HeroProps = { lang: Locale; t: Dictionary["hero"] };
+
+export default function Hero({ lang, t }: HeroProps) {
   return (
     <section className="pt-section pb-16">
       <Container className="grid items-center gap-14 lg:grid-cols-2">
         <div className="flex flex-col gap-10">
           <h1 className="max-w-xl font-display text-hero font-medium uppercase text-ink">
-            From product to end customer, we connect every link in your value chain
+            {t.headline}
           </h1>
           <div className="flex flex-wrap gap-5">
-            <Button href="/book" variant="primary" size="lg">
-              Book a meeting
+            <Button href={localePath(lang, "/book")} variant="primary" size="lg">
+              {t.bookMeeting}
             </Button>
-            <Button href="/services" variant="outline" size="lg">
-              Our services
+            <Button href={localePath(lang, "/services")} variant="outline" size="lg">
+              {t.ourServices}
             </Button>
           </div>
         </div>
@@ -27,7 +31,7 @@ export default function Hero() {
           />
           <Image
             src="/images/hero.png"
-            alt="TÓKI product and packaging work"
+            alt={t.imageAlt}
             width={826}
             height={924}
             priority
