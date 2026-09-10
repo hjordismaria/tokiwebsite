@@ -238,12 +238,22 @@ npm run lint && npm run build
    **Add new site → Import an existing project**.
 2. Pick **GitHub**, authorise Netlify, and select **`hjordismaria/tokiwebsite`**.
 3. Netlify auto-detects Next.js and pre-fills the build settings. They should read:
+   - **Base directory:** *leave empty*
    - **Build command:** `npm run build`
    - **Publish directory:** `.next`
    - **Branch to deploy:** `main`
 
-   These are also committed in [`netlify.toml`](netlify.toml), which wins over the UI — so if
-   you need to change them, edit that file rather than the dashboard.
+   The build command and publish directory are also committed in
+   [`netlify.toml`](netlify.toml), which wins over the UI — so if you need to change them, edit
+   that file rather than the dashboard.
+
+   **Leave base directory blank.** This is not a monorepo: `package.json`, `netlify.toml`,
+   `.nvmrc` and `next.config.ts` all sit at the repository root, which is exactly where Netlify
+   looks by default. Base directory is only for apps living in a subfolder (`/frontend`,
+   `/packages/web`). Setting it wrongly breaks the build twice over — Netlify would look for
+   `package.json` somewhere it isn't, and the publish directory is resolved *relative to the
+   base*, so `.next` would become `<base>/.next`. Putting the repository's own name in there is
+   a common and confusing mistake; the field means "path inside the repo", not "the repo".
 4. **Do not add any environment variables.** In particular never add `FIGMA_API_KEY` — it is
    only used locally to pull assets out of Figma, is not needed to build, and Netlify's secret
    scanner will fail the build if it finds a token's value in the output.
